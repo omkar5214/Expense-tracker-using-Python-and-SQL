@@ -13,36 +13,28 @@ from database import (
 )
 
 # Main Window
-
 window = tk.Tk()
 window.title("Expense Tracker")
 window.geometry("800x600")
 
-
-# =========================
 # Add Expense
-# =========================
-
 def add_expense_window():
-
     expense_window = tk.Toplevel(window)
     expense_window.title("Add Expense")
     expense_window.geometry("500x500")
-
     title = tk.Label(
         expense_window,
         text="Add Expense",
         font=("Arial", 22, "bold")
     )
     title.pack(pady=25)
-
+    
     # Amount
     tk.Label(
         expense_window,
         text="Amount:",
         font=("Arial", 12)
     ).pack(pady=5)
-
     amount_entry = tk.Entry(
         expense_window,
         width=30
@@ -55,9 +47,7 @@ def add_expense_window():
         text="Category:",
         font=("Arial", 12)
     ).pack(pady=5)
-
     categories = get_categories()
-
     category_box = ttk.Combobox(
         expense_window,
         values=[category[1] for category in categories],
@@ -72,7 +62,6 @@ def add_expense_window():
         text="Description:",
         font=("Arial", 12)
     ).pack(pady=5)
-
     description_entry = tk.Entry(
         expense_window,
         width=30
@@ -85,7 +74,6 @@ def add_expense_window():
         text="Date (YYYY-MM-DD):",
         font=("Arial", 12)
     ).pack(pady=5)
-
     date_entry = tk.Entry(
         expense_window,
         width=30
@@ -94,29 +82,22 @@ def add_expense_window():
 
     # Save Expense
     def save_expense():
-
         try:
             amount = float(amount_entry.get())
             category = category_box.get()
             description = description_entry.get()
             expense_date = date_entry.get()
-
             category_id = None
-
             for category_data in categories:
-
                 if category_data[1] == category:
                     category_id = category_data[0]
                     break
-
             if category_id is None:
-
                 messagebox.showerror(
                     "Error",
                     "Please select a category."
                 )
                 return
-
             add_expense(
                 1,
                 category_id,
@@ -124,28 +105,21 @@ def add_expense_window():
                 description,
                 expense_date
             )
-
             messagebox.showinfo(
                 "Success",
                 "Expense added successfully!"
             )
-
             expense_window.destroy()
-
         except ValueError:
-
             messagebox.showerror(
                 "Error",
                 "Amount must be a number."
             )
-
         except Exception as e:
-
             messagebox.showerror(
                 "Database Error",
                 str(e)
             )
-
     add_button = tk.Button(
         expense_window,
         text="Add Expense",
