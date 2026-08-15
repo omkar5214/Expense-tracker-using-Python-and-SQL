@@ -12,10 +12,7 @@ from database import (
     delete_expense
 )
 
-
-# =========================
 # Main Window
-# =========================
 
 window = tk.Tk()
 window.title("Expense Tracker")
