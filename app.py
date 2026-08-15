@@ -126,31 +126,22 @@ def add_expense_window():
         width=20,
         command=save_expense
     )
-
     add_button.pack(pady=25)
 
-
-# =========================
 # View Expenses
-# =========================
 
 def show_expenses():
-
     try:
-
         expenses = get_expenses(1)
-
         expense_window = tk.Toplevel(window)
         expense_window.title("View Expenses")
         expense_window.geometry("900x500")
-
         title = tk.Label(
             expense_window,
             text="All Expenses",
             font=("Arial", 20, "bold")
         )
         title.pack(pady=15)
-
         columns = (
             "ID",
             "Amount",
@@ -158,14 +149,12 @@ def show_expenses():
             "Date",
             "Category"
         )
-
         table = ttk.Treeview(
             expense_window,
             columns=columns,
             show="headings"
         )
         for column in columns:
-
             table.heading(
                 column,
                 text=column
@@ -182,7 +171,6 @@ def show_expenses():
             "Description",
             width=250
         )
-
         table.column(
             "Date",
             width=120
