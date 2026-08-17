@@ -98,6 +98,17 @@ SELECT * FROM expenses;
 
 SELECT * FROM expenses;
 
+USE expense_tracker;
+
 SELECT *
 FROM expenses
 ORDER BY expense_id DESC;
+
+USE expense_tracker;
+
+USE expense_tracker;
+
+ALTER TABLE users
+ADD COLUMN username VARCHAR(50) NOT NULL UNIQUE AFTER name;
+
+DESCRIBE users;
