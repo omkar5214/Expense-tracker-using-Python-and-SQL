@@ -1,25 +1,8 @@
--- ============================================
 -- EXPENSE TRACKER DATABASE
--- ============================================
-
 CREATE DATABASE IF NOT EXISTS expense_tracker;
 
 USE expense_tracker;
-
-
--- ============================================
--- REMOVE OLD TABLES
--- ============================================
-
-DROP TABLE IF EXISTS expenses;
-DROP TABLE IF EXISTS categories;
-DROP TABLE IF EXISTS users;
-
-
--- ============================================
 -- USERS TABLE
--- ============================================
-
 CREATE TABLE users (
     user_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
@@ -29,21 +12,13 @@ CREATE TABLE users (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
--- ============================================
 -- CATEGORIES TABLE
--- ============================================
-
 CREATE TABLE categories (
     category_id INT PRIMARY KEY AUTO_INCREMENT,
     category_name VARCHAR(100) NOT NULL UNIQUE
 );
 
-
--- ============================================
 -- EXPENSES TABLE
--- ============================================
-
 CREATE TABLE expenses (
     expense_id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
@@ -60,11 +35,7 @@ CREATE TABLE expenses (
         REFERENCES categories(category_id)
 );
 
-
--- ============================================
 -- DEFAULT CATEGORIES
--- ============================================
-
 INSERT INTO categories (category_name)
 VALUES
 ('Food'),
@@ -76,23 +47,13 @@ VALUES
 ('Healthcare'),
 ('Other');
 
-
--- ============================================
 -- TEST USER
--- ============================================
--- Temporary user for testing the application.
--- Later, users will be created through register.py.
-
 INSERT INTO users
 (name, username, email, password)
 VALUES
 ('Omkar', 'omkar123', 'omkar@example.com', 'test123');
 
-
--- ============================================
 -- TEST EXPENSES
--- ============================================
-
 INSERT INTO expenses
 (user_id, category_id, amount, description, expense_date)
 VALUES
@@ -101,18 +62,10 @@ VALUES
 (1, 3, 500.00, 'T-shirt', '2026-08-10'),
 (1, 4, 1200.00, 'Electricity bill', '2026-08-05');
 
-
--- ============================================
 -- CHECK TABLES
--- ============================================
-
 SHOW TABLES;
 
-
--- ============================================
 -- CHECK USERS
--- ============================================
-
 SELECT
     user_id,
     name,
@@ -121,28 +74,17 @@ SELECT
     created_at
 FROM users;
 
-
--- ============================================
 -- CHECK CATEGORIES
--- ============================================
 
 SELECT *
 FROM categories;
 
-
--- ============================================
 -- CHECK EXPENSES
--- ============================================
-
 SELECT *
 FROM expenses
 ORDER BY expense_id DESC;
 
-
--- ============================================
 -- VIEW EXPENSES WITH CATEGORY
--- ============================================
-
 SELECT
     e.expense_id,
     e.user_id,
@@ -156,21 +98,13 @@ JOIN categories c
 WHERE e.user_id = 1
 ORDER BY e.expense_id DESC;
 
-
--- ============================================
 -- TOTAL EXPENSES FOR USER
--- ============================================
-
 SELECT
     SUM(amount) AS total_expense
 FROM expenses
 WHERE user_id = 1;
 
-
--- ============================================
 -- CATEGORY SUMMARY
--- ============================================
-
 SELECT
     c.category_name,
     SUM(e.amount) AS total_amount
@@ -180,11 +114,7 @@ JOIN categories c
 WHERE e.user_id = 1
 GROUP BY c.category_name;
 
-
--- ============================================
 -- UPDATE EXPENSE TEST
--- ============================================
-
 UPDATE expenses
 SET amount = 150.00,
     description = 'Lunch + cold drink'
@@ -194,11 +124,7 @@ SELECT *
 FROM expenses
 WHERE expense_id = 1;
 
-
--- ============================================
 -- DELETE EXPENSE TEST
--- ============================================
-
 DELETE FROM expenses
 WHERE expense_id = 4;
 
