@@ -133,3 +133,18 @@ FROM expenses
 ORDER BY expense_id DESC;
 
 DESCRIBE users;
+USE expense_tracker;
+
+SELECT
+    user_id,
+    name,
+    username,
+    email
+FROM users;
+SELECT user_id, name, username, email, password
+FROM users;
+USE expense_tracker;
+
+UPDATE users
+SET password = SHA2('test123', 256)
+WHERE user_id = 1;
