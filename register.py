@@ -5,7 +5,6 @@ from database import register_user
 
 
 def register_window(login_window):
-
     # WINDOW
     register = tk.Toplevel(login_window)
     register.title("Create Account")
