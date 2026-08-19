@@ -13,8 +13,7 @@ from database import (
     delete_expense
 )
 
-def start_app(user_id, name):
-
+def start_app(user_id, name, login_window):
     # MAIN WINDOW
     window = tk.Tk()
     window.title(f"Expense Tracker - {name}")
@@ -513,14 +512,34 @@ def start_app(user_id, name):
     )
     category_button.pack(pady=10)
 
-    exit_button = tk.Button(
+    def logout():
+        confirm = messagebox.askyesno(
+            "Logout",
+            "Are you sure you want to logout?"
+        )
+
+        if not confirm:
+            return
+
+        window.destroy()
+
+        # Reset login page
+        from login import reset_login_form
+        reset_login_form()
+
+        # Show login page again
+        login_window.deiconify()
+        login_window.lift()
+        login_window.focus_force()
+    logout_button = tk.Button(
         window,
-        text="Exit",
+        text="Logout",
         width=25,
         height=2,
-        command=window.destroy
+        command=logout
     )
-    exit_button.pack(pady=10)
+
+    logout_button.pack(pady=10)
 
     # Start Expense Tracker
     window.mainloop()
