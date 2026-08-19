@@ -3,13 +3,15 @@ from tkinter import messagebox
 import os
 from database import register_user
 
-
 def register_window(login_window):
-    # WINDOW
     register = tk.Toplevel(login_window)
     register.title("Create Account")
-    register.geometry("500x600")
+    register.geometry("500x700")
     register.resizable(False, False)
+
+    # Keep registration window above login
+    register.transient(login_window)
+    register.grab_set()
 
     # COLORS
     background_color = "#F4F7FB"
@@ -19,15 +21,42 @@ def register_window(login_window):
     secondary_text = "#64748B"
 
     register.configure(
-        bg=background_color
+        bg=background_color)
+
+    # IMAGE PATHS
+    base_dir = os.path.dirname(
+        os.path.abspath(__file__)
     )
+    image_folder = os.path.join(
+        base_dir,
+        "images"
+    )
+    close_eye_path = os.path.join(
+        image_folder,
+        "closeeye.png"
+    )
+    open_eye_path = os.path.join(
+        image_folder,
+        "openeye.png"
+    )
+    close_eye_image = tk.PhotoImage(
+        master=register,
+        file=close_eye_path
+    )
+    open_eye_image = tk.PhotoImage(
+        master=register,
+        file=open_eye_path
+    )
+    # Keep references alive
+    register.close_eye_image = close_eye_image
+    register.open_eye_image = open_eye_image
 
     # MAIN CARD
     card = tk.Frame(
         register,
         bg=card_color,
         width=400,
-        height=540
+        height=630
     )
 
     card.place(
@@ -35,6 +64,7 @@ def register_window(login_window):
         rely=0.5,
         anchor="center"
     )
+    card.pack_propagate(False)
 
     # TITLE
     title = tk.Label(
@@ -45,9 +75,10 @@ def register_window(login_window):
         bg=card_color
     )
     title.pack(
-        pady=(25, 5)
+        pady=(30, 5)
     )
 
+    # SUBTITLE
     subtitle = tk.Label(
         card,
         text="Create your Expense Tracker account",
@@ -55,7 +86,6 @@ def register_window(login_window):
         fg=secondary_text,
         bg=card_color
     )
-
     subtitle.pack(
         pady=(0, 20)
     )
@@ -72,7 +102,6 @@ def register_window(login_window):
         padx=45,
         pady=(5, 4)
     )
-
     name_entry = tk.Entry(
         card,
         font=("Arial", 11),
@@ -98,14 +127,12 @@ def register_window(login_window):
         padx=45,
         pady=(12, 4)
     )
-
     username_entry = tk.Entry(
         card,
         font=("Arial", 11),
         relief="solid",
         bd=1
     )
-
     username_entry.pack(
         padx=45,
         fill="x",
@@ -124,14 +151,12 @@ def register_window(login_window):
         padx=45,
         pady=(12, 4)
     )
-
     email_entry = tk.Entry(
         card,
         font=("Arial", 11),
         relief="solid",
         bd=1
     )
-
     email_entry.pack(
         padx=45,
         fill="x",
@@ -151,12 +176,12 @@ def register_window(login_window):
         pady=(12, 4)
     )
 
-    # PASSWORD CONTAINER
+    # PASSWORD FRAME
     password_frame = tk.Frame(
         card,
         bg=card_color,
         highlightbackground="#CBD5E1",
-        highlightcolor="#2563EB",
+        highlightcolor=primary_color,
         highlightthickness=1
     )
 
@@ -182,25 +207,6 @@ def register_window(login_window):
         ipady=8
     )
 
-    # EYE IMAGES
-    image_folder = os.path.join(
-        os.path.dirname(__file__),
-        "images"
-    )
-
-    close_eye_image = tk.PhotoImage(
-        file=os.path.join(
-            image_folder,
-            "closeeye.png"
-        )
-    )
-
-    open_eye_image = tk.PhotoImage(
-        file=os.path.join(
-            image_folder,
-            "openeye.png"
-        )
-    )
     # PASSWORD VISIBILITY
     password_visible = False
 
@@ -213,15 +219,15 @@ def register_window(login_window):
             eye_button.config(
                 image=close_eye_image
             )
+            eye_button.image = close_eye_image
             password_visible = False
+
         else:
             password_entry.config(
-                show=""
-            )
-
+                show="")
             eye_button.config(
-                image=open_eye_image
-            )
+                image=open_eye_image)
+            eye_button.image = open_eye_image
             password_visible = True
 
     # EYE BUTTON
@@ -235,45 +241,58 @@ def register_window(login_window):
         cursor="hand2",
         command=toggle_password
     )
-
     eye_button.pack(
         side="right",
-        padx=8
-    )
+        padx=8)
 
-    # CREATE ACCOUNT
+    # Keep image reference on button
+    eye_button.image = close_eye_image
+
+    # CREATE ACCOUNT FUNCTION
     def create_account():
         name = name_entry.get().strip()
         username = username_entry.get().strip()
         email = email_entry.get().strip()
         password = password_entry.get()
+
+        # VALIDATION
         if not name:
             messagebox.showerror(
                 "Error",
-                "Please enter your name."
+                "Please enter your name.",
+                parent=register
             )
+            name_entry.focus_set()
             return
 
         if not username:
             messagebox.showerror(
                 "Error",
-                "Please enter a username."
+                "Please enter a username.",
+                parent=register
             )
+            username_entry.focus_set()
             return
 
         if not email:
             messagebox.showerror(
                 "Error",
-                "Please enter your email."
+                "Please enter your email.",
+                parent=register
             )
+            email_entry.focus_set()
             return
 
         if not password:
             messagebox.showerror(
                 "Error",
-                "Please enter your password."
+                "Please enter your password.",
+                parent=register
             )
+            password_entry.focus_set()
             return
+
+        # REGISTER USER
         try:
             register_user(
                 name,
@@ -283,19 +302,34 @@ def register_window(login_window):
             )
             messagebox.showinfo(
                 "Success",
-                "Account created successfully!"
+                "Account created successfully!",
+                parent=register
             )
+
+            # Close registration page
+            register.grab_release()
             register.destroy()
+
+            # Return focus to login
+            login_window.deiconify()
+            login_window.lift()
+            login_window.focus_force()
+
         except Exception as e:
             error_message = str(e)
-            if "username" in error_message.lower():
+            if (
+                "username" in error_message.lower()
+                and "duplicate" in error_message.lower()):
                 error_message = "Username already exists."
-            elif "email" in error_message.lower():
+            elif (
+                "email" in error_message.lower()
+                and "duplicate" in error_message.lower()
+            ):
                 error_message = "Email already exists."
-
             messagebox.showerror(
                 "Registration Error",
-                error_message
+                error_message,
+                parent=register
             )
 
     # CREATE ACCOUNT BUTTON
@@ -308,33 +342,39 @@ def register_window(login_window):
         activebackground=primary_color,
         activeforeground="white",
         relief="flat",
+        bd=0,
         cursor="hand2",
         width=30,
         height=2,
         command=create_account
     )
-
     register_button.pack(
-        pady=(20, 10)
+        pady=(22, 12)
     )
+    
+    # BACK TO LOGIN PAGE
+    def back_to_login():
 
-    # BACK TO LOGIN
+        register.grab_release()
+        register.destroy()
+
+        login_window.deiconify()
+        login_window.lift()
+        login_window.focus_force()
+
     back_button = tk.Button(
         card,
         text="Already have an account? Login",
         font=("Arial", 10),
         bg=card_color,
         fg=primary_color,
+        activebackground=card_color,
         activeforeground=primary_color,
         relief="flat",
         bd=0,
         cursor="hand2",
-        command=register.destroy
+        command=back_to_login
     )
 
     back_button.pack()
-
-    # FOCUS
-    name_entry.focus()
-    register.transient(login_window)
-    register.grab_set()
+    name_entry.focus_set()
